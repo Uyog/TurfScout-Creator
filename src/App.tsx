@@ -19,6 +19,7 @@ import { ellipse, home, search, settings, square, triangle } from 'ionicons/icon
 import Splash from '../src/pages/Splash';
 import AuthPage from './pages/Auth';
 import HomePage from '../src/pages/Home';
+import CreateTurfs from '../src/pages/Create-turfs';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -87,6 +88,7 @@ const App: React.FC = () => {
         <IonRouterOutlet>
           <Route path="/auth" component={AuthPage} exact />
           <Route path="/home" component={HomePage} exact />
+          <Route path="/create" component={CreateTurfs} exact />
           <Route exact path="/">
               {authenticated ? <Redirect to="/home" /> : <Redirect to="/auth" />}
 </Route>

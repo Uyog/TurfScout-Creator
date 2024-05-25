@@ -191,8 +191,8 @@ const FabButton: React.FC<FabButtonProps> = ({ history }) => (
       <IonIcon icon={add}></IonIcon>
     </IonFabButton>
     <IonFabList side="start">
-      <IonFabButton onClick={() => history.push('/search')}> 
-        <IonIcon icon={search}></IonIcon>
+      <IonFabButton onClick={() => history.push('/create')}> 
+        <IonIcon icon={add}></IonIcon>
       </IonFabButton>
       <IonFabButton onClick={() => history.push('/profile')}> 
         <IonIcon icon={person}></IonIcon>
@@ -200,6 +200,7 @@ const FabButton: React.FC<FabButtonProps> = ({ history }) => (
       <IonFabButton onClick={() => history.push('/settings')}> 
         <IonIcon icon={settings}></IonIcon>
       </IonFabButton>
+
     </IonFabList>
   </IonFab>
 );
