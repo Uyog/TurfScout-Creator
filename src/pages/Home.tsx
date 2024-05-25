@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {  IonFooter, IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonPage, IonTitle, IonToolbar, IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonGrid, IonRow, IonCol, IonFab, IonFabButton, IonFabList, IonIcon } from '@ionic/react';
-import { add, people, person, search, settings } from 'ionicons/icons';
+import { add, eye, people, person, search, settings } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import Lottie from 'react-lottie';
 import animationData from '../components/Creator.json';
@@ -156,21 +156,22 @@ const HomePage: React.FC<HomePageProps> = ({ authenticated }) => {
           <h2 style={{ color: '#97FB57', fontWeight: 'bold', fontSize: 25, marginLeft: 20 }}>Best Turfs</h2>
             
              {/* Carousel Slider */}
-          <Slider {...settings} className="custom-slider"> {/* Add className for custom styling */}
-            {sampleData.map((item) => (
-              <div className="slider-item"> {/* Wrap each card in a div with custom class for spacing */}
-                <IonCard key={item.id} className="custom-card"> {/* Add className for custom styling */}
-                  <IonCardHeader>
-                    <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
-                    <IonCardTitle>{item.title}</IonCardTitle>
-                  </IonCardHeader>
-                  <IonCardContent>
-                    <p>{item.content}</p>
-                  </IonCardContent>
-                </IonCard>
-              </div>
-            ))}
-          </Slider>
+             <Slider {...settings} className="custom-slider">
+  {sampleData.map((item) => (
+    <div key={item.id} className="slider-item"> {/* Move key prop to outer div */}
+      <IonCard className="custom-card">
+        <IonCardHeader>
+          <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
+          <IonCardTitle>{item.title}</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          <p>{item.content}</p>
+        </IonCardContent>
+      </IonCard>
+    </div>
+  ))}
+</Slider>
+
 
           <FabButton history={history} /> 
         </IonContent>
@@ -197,8 +198,8 @@ const FabButton: React.FC<FabButtonProps> = ({ history }) => (
       <IonFabButton onClick={() => history.push('/profile')}> 
         <IonIcon icon={person}></IonIcon>
       </IonFabButton>
-      <IonFabButton onClick={() => history.push('/settings')}> 
-        <IonIcon icon={settings}></IonIcon>
+      <IonFabButton onClick={() => history.push('/view')}> 
+        <IonIcon icon={eye}></IonIcon>
       </IonFabButton>
 
     </IonFabList>

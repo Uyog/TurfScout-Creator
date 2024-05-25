@@ -20,6 +20,7 @@ import Splash from '../src/pages/Splash';
 import AuthPage from './pages/Auth';
 import HomePage from '../src/pages/Home';
 import CreateTurfs from '../src/pages/Create-turfs';
+import ViewTurfs from '../src/pages/View-turfs';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -89,6 +90,7 @@ const App: React.FC = () => {
           <Route path="/auth" component={AuthPage} exact />
           <Route path="/home" component={HomePage} exact />
           <Route path="/create" component={CreateTurfs} exact />
+          <Route path="/view" component={ViewTurfs} exact />
           <Route exact path="/">
               {authenticated ? <Redirect to="/home" /> : <Redirect to="/auth" />}
 </Route>
