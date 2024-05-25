@@ -1,0 +1,7 @@
+{
+  "name": "turf-scout-creator",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
