@@ -1,0 +1,14 @@
+/* HomePage.css */
+
+.custom-slider {
+    padding: 0 20px; /* Add padding to the slider to prevent cards from touching the edge */
+  }
+  
+  .slider-item {
+    margin-right: 20px; /* Add margin between cards */
+  }
+  
+  .custom-card {
+    margin-bottom: 20px; /* Add margin between cards */
+  }
+  

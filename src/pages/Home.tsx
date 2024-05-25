@@ -5,6 +5,10 @@ import { useHistory } from 'react-router-dom';
 import Lottie from 'react-lottie';
 import animationData from '../components/Creator.json';
 import { Redirect } from 'react-router-dom';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import './Home.css';
 
 interface User {
   id: number;
@@ -16,14 +20,7 @@ interface HomePageProps {
   authenticated: boolean;
 }
 
-interface ExampleCardProps {
-  userData: {
-    id: number;
-    title: string;
-    subtitle: string;
-    content: string;
-  };
-}
+
 
 const HomePage: React.FC<HomePageProps> = ({ authenticated }) => {
   const [userName, setUserName] = useState<string>(""); 
@@ -86,10 +83,24 @@ const HomePage: React.FC<HomePageProps> = ({ authenticated }) => {
     if (!authenticated) {
       return <Redirect to="/" />;
     }
-
-    
   };
 
+  const sampleData = [
+    { id: 1, title: "Title 1", subtitle: "Subtitle 1", content: "Content 1" },
+    { id: 2, title: "Title 2", subtitle: "Subtitle 2", content: "Content 2" },
+    { id: 3, title: "Title 3", subtitle: "Subtitle 3", content: "Content 3" },
+    // Add more sample data as needed
+  ];
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true, // Enable autoplay
+    autoplaySpeed: 3000, // Set autoplay speed (in milliseconds)
+  };
  
 
   
@@ -103,8 +114,6 @@ const HomePage: React.FC<HomePageProps> = ({ authenticated }) => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-
-          
         
            </IonContent>
         <IonFooter>
@@ -142,46 +151,27 @@ const HomePage: React.FC<HomePageProps> = ({ authenticated }) => {
                 <span style={{ color: '#97FB57', fontWeight: 'bold', fontSize: 30, marginLeft: 40 }}>Welcome {userName}!</span>
               </div>
             </IonCardContent>
-            <h4 style={{ color: '#97FB57', fontWeight: 'bold', fontSize: 20, marginLeft: 20 }}>Book A Turf Today!</h4>
+            <h4 style={{ color: '#97FB57', fontWeight: 'bold', fontSize: 20, marginLeft: 20 }}>Create A Turf Today!</h4>
           </IonCard>
           <h2 style={{ color: '#97FB57', fontWeight: 'bold', fontSize: 25, marginLeft: 20 }}>Best Turfs</h2>
-          <IonGrid>
-            <IonRow>
-              <IonCol>
-                <MyCard userData={{ id: 1, title: 'Arena One', subtitle: 'Galleria', content: 'Card Content 1' }} />
-              </IonCol>
-              <IonCol>
-                <MyCard userData={{ id: 2, title: 'Freedom Heights', subtitle: 'Langata', content: 'Card Content 2' }} />
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-          <IonCard style={{ backgroundColor: 'black' }}>
-            <IonCardHeader>
-              <IonCardTitle style={{ color: '#97FB57',}}>Top Rated Creators</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              <IonRow>
-                <IonCol size="4">
-                  <IonAvatar>
-                    <img src="https://via.placeholder.com/150" alt="Avatar" />
-                  </IonAvatar>
-                  <p style={{ color: '#97FB57',}}>John Doe</p>
-                </IonCol>
-                <IonCol size="4">
-                  <IonAvatar>
-                    <img src="https://via.placeholder.com/150" alt="Avatar" />
-                  </IonAvatar>
-                  <p style={{ color: '#97FB57',}}>Jane Smith</p>
-                </IonCol>
-                <IonCol size="4">
-                  <IonAvatar>
-                    <img src="https://via.placeholder.com/150" alt="Avatar" />
-                  </IonAvatar>
-                  <p style={{ color: '#97FB57',}}>Michael Johnson</p>
-                </IonCol>
-              </IonRow>
-            </IonCardContent>
-          </IonCard>
+            
+             {/* Carousel Slider */}
+          <Slider {...settings} className="custom-slider"> {/* Add className for custom styling */}
+            {sampleData.map((item) => (
+              <div className="slider-item"> {/* Wrap each card in a div with custom class for spacing */}
+                <IonCard key={item.id} className="custom-card"> {/* Add className for custom styling */}
+                  <IonCardHeader>
+                    <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
+                    <IonCardTitle>{item.title}</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <p>{item.content}</p>
+                  </IonCardContent>
+                </IonCard>
+              </div>
+            ))}
+          </Slider>
+
           <FabButton history={history} /> 
         </IonContent>
       </IonPage>
@@ -189,19 +179,7 @@ const HomePage: React.FC<HomePageProps> = ({ authenticated }) => {
   );
 };
 
-const MyCard: React.FC<ExampleCardProps> = ({ userData }) => (
-  <IonCard style={{ maxWidth: '300px', margin: '0 auto', backgroundColor: 'black' }}>
-    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-    <IonCardHeader>
-      <IonCardTitle style={{ fontSize: 'clamp(12px, 3vw, 24px)', color: '#97FB57' }}>{userData.title}</IonCardTitle>
-      <IonCardSubtitle style={{ fontSize: 'clamp(10px, 2.5vw, 20px)', color: '#97FB57' }}>{userData.subtitle}</IonCardSubtitle>
-    </IonCardHeader>
-    <IonCardContent style={{ fontSize: 'clamp(10px, 2vw, 16px)', color: '#97FB57' }}>
-      <p>{userData.content}</p>
-      <IonButton expand="full" color="primary">Book</IonButton>
-    </IonCardContent>
-  </IonCard>
-);
+
 
 interface FabButtonProps {
   history: any; 
