@@ -1,0 +1,31 @@
+.slide-card {
+    margin-top: -50px; /* Adjust the margin to control the overlap */
+  }
+  
+  .slide-card:first-child {
+    margin-top: 0;
+  }
+  
+  .slider-container .slick-slide {
+    transform: scale(1.0); /* Adjust the scale for the size of the overlapping effect */
+    transition: transform 0.5s ease-in-out; 
+  }
+  
+  .slider-container .slick-slide.slick-current {
+    transform: scale(1); /* Adjust the scale for the size of the current slide */
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px; /* Adjust spacing as needed */
+  }
+  
+  /* Optional: Adjust button styles */
+  .button-container button {
+    width: 45%; /* Adjust width as needed */
+  }
+
+  
+  
+  
