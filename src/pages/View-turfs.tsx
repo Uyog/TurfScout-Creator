@@ -10,15 +10,19 @@ import {
   IonButtons,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonModal,
   IonButton,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonTextarea,
   IonCard,
   IonCardContent,
-  IonLabel,
 } from '@ionic/react';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import '../pages/View-turfs.css'; // Import custom CSS file for styling
+import '../pages/View-turfs.css';
 import MyButton from '../components/Button';
 
 interface Turf {
@@ -34,6 +38,9 @@ const ViewTurfs: React.FC = () => {
   const [turfs, setTurfs] = useState<Turf[]>([]);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [selectedTurf, setSelectedTurf] = useState<Turf | null>(null);
+  const [updateData, setUpdateData] = useState<Partial<Turf>>({});
 
   useEffect(() => {
     const fetchTurfs = async () => {
@@ -43,7 +50,6 @@ const ViewTurfs: React.FC = () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        console.log('Fetched turfs:', response.data);
         if (response.data.length === 0) {
           setHasMore(false);
           return;
@@ -57,8 +63,9 @@ const ViewTurfs: React.FC = () => {
     fetchTurfs();
   }, [page]);
 
-  const loadMore = () => {
-    setPage(page + 1);
+  const loadMore = (e: CustomEvent<void>) => {
+    setPage((prevPage) => prevPage + 1);
+    (e.target as HTMLIonInfiniteScrollElement).complete();
   };
 
   const settings = {
@@ -66,23 +73,69 @@ const ViewTurfs: React.FC = () => {
     infinite: true,
     vertical: true,
     verticalSwiping: true,
-    speed: 3000, // Adjust speed for slower rotation
-    slidesToShow: 3, // Show multiple slides for a circular effect
+    speed: 6000,
+    slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 0, // Set to 0 for continuous autoplay
+    autoplaySpeed: 0,
     cssEase: "linear",
     centerMode: true,
     focusOnSelect: true,
-    variableWidth: true, // Allow variable width slides for circular effect
+    variableWidth: true,
   };
 
-  const handleUpdate = (id: number) => {
-    // Update logic here
+  const handleUpdate = (turf: Turf) => {
+    setSelectedTurf(turf);
+    setUpdateData({
+      name: turf.name,
+      location: turf.location,
+      description: turf.description,
+      price: turf.price,
+    });
+    setShowUpdateModal(true);
   };
 
-  const handleDelete = (id: number) => {
-    // Delete logic here
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Are you sure you want to delete this turf?')) {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/turf/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        setTurfs(turfs.filter((turf) => turf.id !== id));
+      } catch (error) {
+        console.error('Error deleting turf:', error);
+      }
+    }
+  };
+
+  const handleUpdateChange = (e: CustomEvent) => {
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    const { name, value } = target;
+    setUpdateData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateSubmit = async () => {
+    if (!selectedTurf) return;
+    try {
+      await axios.put(`http://127.0.0.1:8000/api/turf/${selectedTurf.id}`, updateData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setTurfs(
+        turfs.map((turf) =>
+          turf.id === selectedTurf.id ? { ...turf, ...updateData } : turf
+        )
+      );
+      setShowUpdateModal(false);
+    } catch (error) {
+      console.error('Error updating turf:', error);
+    }
   };
 
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -103,8 +156,8 @@ const ViewTurfs: React.FC = () => {
       <IonContent className="ion-padding">
         <div className="slider-container">
           <Slider {...settings}>
-            {turfs.map((turf, index) => (
-              <div key={index} className="slide-card">
+            {turfs.map((turf) => (
+              <div key={turf.id} className="slide-card">
                 <IonCard>
                   <img
                     src={`http://127.0.0.1:8000${turf.image_url}`}
@@ -116,13 +169,13 @@ const ViewTurfs: React.FC = () => {
                     <IonLabel>
                       <h2>{turf.name}</h2>
                       <p>{turf.location}</p>
-                     <p className="price">kshs {turf.price}</p>
-                      <p>{turf.description}</p> 
+                      <p className="price">kshs {turf.price}</p>
+                      <p>{turf.description}</p>
                     </IonLabel>
                     <div className="button-container">
-    <MyButton text="Update" onClick={() => handleUpdate(turf.id)} />
-    <MyButton text="Delete" onClick={() => handleDelete(turf.id)} />
-  </div>
+                      <MyButton text="Update" onClick={() => handleUpdate(turf)} />
+                      <MyButton text="Delete" onClick={() => handleDelete(turf.id)} />
+                    </div>
                   </IonCardContent>
                 </IonCard>
               </div>
@@ -132,6 +185,55 @@ const ViewTurfs: React.FC = () => {
         <IonInfiniteScroll threshold="100px" disabled={!hasMore} onIonInfinite={loadMore}>
           <IonInfiniteScrollContent loadingText="Loading more turfs..." loadingSpinner="dots" />
         </IonInfiniteScroll>
+
+        <IonModal isOpen={showUpdateModal} onDidDismiss={() => setShowUpdateModal(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Update Turf</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <IonItem>
+              <IonLabel position="stacked">Name</IonLabel>
+              <IonInput
+                name="name"
+                value={updateData.name}
+                onIonChange={(e) => handleUpdateChange(e as CustomEvent)}
+              />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Location</IonLabel>
+              <IonInput
+                name="location"
+                value={updateData.location}
+                onIonChange={(e) => handleUpdateChange(e as CustomEvent)}
+              />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Description</IonLabel>
+              <IonTextarea
+                name="description"
+                value={updateData.description}
+                onIonChange={(e) => handleUpdateChange(e as CustomEvent)}
+              />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Price</IonLabel>
+              <IonInput
+                name="price"
+                type="number"
+                value={updateData.price}
+                onIonChange={(e) => handleUpdateChange(e as CustomEvent)}
+              />
+            </IonItem>
+            <IonButton expand="block" onClick={handleUpdateSubmit}>
+              Save
+            </IonButton>
+            <IonButton expand="block" color="light" onClick={() => setShowUpdateModal(false)}>
+              Cancel
+            </IonButton>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </>
   );
