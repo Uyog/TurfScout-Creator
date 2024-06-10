@@ -12,7 +12,7 @@ const MyButton: React.FC<MyButtonProps> = ({ text, onClick }) => {
       style={{
         width: '100px',
         padding: '10px',
-        borderRadius: '25px',
+        borderRadius: '10px',
         backgroundColor: '#97FB57',
         cursor: 'pointer',
         textAlign: 'center',

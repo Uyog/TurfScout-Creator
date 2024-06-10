@@ -18,6 +18,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, home, search, settings, square, triangle } from 'ionicons/icons';
 import Splash from '../src/pages/Splash';
 import AuthPage from './pages/Auth';
+import ForgotPassword from '../src/pages/ForgotPassword';
 import HomePage from '../src/pages/Home';
 import CreateTurfs from '../src/pages/Create-turfs';
 import ViewTurfs from '../src/pages/View-turfs';
@@ -60,15 +61,14 @@ const App: React.FC = () => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    
     setTimeout(() => {
-      setLoading(false); 
+      setLoading(false);
     }, 3000);
   }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setAuthenticated(!!token); 
+    setAuthenticated(!!token);
   }, []);
 
   const handleAuthentication = (isAuthenticated: boolean) => {
@@ -76,26 +76,27 @@ const App: React.FC = () => {
   };
 
   const handleAnimationComplete = () => {
-    
     console.log('Animation completed');
   };
 
   return (
     <IonApp>
       {loading ? (
-        <SplashScreen onAnimationComplete={handleAnimationComplete} /> 
+        <SplashScreen onAnimationComplete={handleAnimationComplete} />
       ) : (
         <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/auth" component={AuthPage} exact />
-          <Route path="/home" component={HomePage} exact />
-          <Route path="/create" component={CreateTurfs} exact />
-          <Route path="/view" component={ViewTurfs} exact />
-          <Route exact path="/">
+          <IonRouterOutlet>
+            <Route path="/auth" component={AuthPage} exact />
+            <Route path="/home" component={HomePage} exact />
+            <Route path="/forgot-password" component={ForgotPassword} exact />
+            <Route path="/create" component={CreateTurfs} exact />
+            <Route path="/view" component={ViewTurfs} exact />
+            <Route path="/forgot-password" component={ForgotPassword} exact />
+            <Route exact path="/">
               {authenticated ? <Redirect to="/home" /> : <Redirect to="/auth" />}
-</Route>
-        </IonRouterOutlet>
-      </IonReactRouter>
+            </Route>
+          </IonRouterOutlet>
+        </IonReactRouter>
       )}
     </IonApp>
   );
