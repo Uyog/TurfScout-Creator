@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, useRef } from 'react';
 import { IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton } from '@ionic/react';
 import MyButton from '../components/Button';
-import { FaCamera } from 'react-icons/fa';
+import { FaCamera, FaUser } from 'react-icons/fa';
 
 const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<{ id: number; name: string; email: string; profile_picture: string | null } | null>(null);
@@ -128,7 +128,7 @@ const ProfilePage: React.FC = () => {
                   style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }} 
                 />
               ) : (
-                <p>No profile picture available</p>
+                <FaUser style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover', backgroundColor: '#ccc', padding: '20px' }} />
               )}
               <div 
                 style={{
