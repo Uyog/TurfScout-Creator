@@ -19,6 +19,7 @@ import { ellipse, home, search, settings, square, triangle } from 'ionicons/icon
 import Splash from '../src/pages/Splash';
 import AuthPage from './pages/Auth';
 import ForgotPassword from '../src/pages/ForgotPassword';
+import ProfilePage from './pages/Profile';
 import HomePage from '../src/pages/Home';
 import CreateTurfs from '../src/pages/Create-turfs';
 import ViewTurfs from '../src/pages/View-turfs';
@@ -89,6 +90,7 @@ const App: React.FC = () => {
             <Route path="/auth" component={AuthPage} exact />
             <Route path="/home" component={HomePage} exact />
             <Route path="/forgot-password" component={ForgotPassword} exact />
+            <Route path="/profile" component={ProfilePage} exact />
             <Route path="/create" component={CreateTurfs} exact />
             <Route path="/view" component={ViewTurfs} exact />
             <Route path="/forgot-password" component={ForgotPassword} exact />
