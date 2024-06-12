@@ -1,0 +1,126 @@
+.create-turf-container {
+    background-color: #000;
+    color: #76ff03;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    height: 100vh;
+    overflow-y: auto; 
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #76ff03;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #76ff03;
+    background-color: #333;
+    color: #ffffff;
+}
+
+.image-button {
+    background-color: #76ff03;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.image-button:hover {
+    background-color: #64dd17;
+}
+
+.image-input {
+    display: none;
+}
+
+.image-preview {
+    margin-top: 10px;
+    width: 80%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.create-button {
+    width: 100px;
+    padding: 10px;
+    background-color: #97FB57;
+    text-align: 'center';
+    font-weight: 500;
+    border-radius: 10px;
+    color: #000;
+    margin: '0 auto';
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.create-button:hover {
+    background-color: #64dd17;
+}
+
+.success-message, .error-message {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 80%;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.success-message {
+    background-color: #4caf50;
+    color: #ffffff;
+}
+
+.error-message {
+    background-color: #f44336;
+    color: #ffffff;
+}
+
+
+.ion-text-field {
+    --padding-start: 16px;
+    --padding-end: 16px;
+}
+
+.custom-placeholder input::placeholder,
+.custom-placeholder textarea::placeholder {
+    color: #97FB57;
+    opacity: 1; 
+}
+
+.name-price-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .name-input {
+    flex: 1; 
+    margin-right: 20px; 
+  }  
+  
+  .price-input {
+    width: 70%;
+    flex: 1; 
+  }
+
+ 

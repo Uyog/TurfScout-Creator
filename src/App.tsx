@@ -21,7 +21,7 @@ import AuthPage from './pages/Auth';
 import ForgotPassword from '../src/pages/ForgotPassword';
 import ProfilePage from './pages/Profile';
 import HomePage from '../src/pages/Home';
-import CreateTurfs from '../src/pages/Create-turfs';
+import CreateTurfs from './pages/CreateTurfs';
 import ViewTurfs from '../src/pages/View-turfs';
 
 
