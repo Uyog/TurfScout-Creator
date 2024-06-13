@@ -1,22 +1,23 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import { IonBackButton, IonButtons, IonInput, IonTextarea, IonItem, IonIcon, IonLabel, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
-import { imageOutline, locationOutline, pricetagOutline, documentTextOutline, layersOutline, trophyOutline } from 'ionicons/icons';
+import {
+  IonBackButton,
+  IonButtons,
+  IonInput,
+  IonTextarea,
+  IonItem,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonIcon,
+  IonLoading
+} from '@ionic/react';
+import { personCircle, locationSharp, pricetag, list, layers } from 'ionicons/icons';
 import './CreateTurfs.css';
 import MyButton from '../components/Button';
-
-const roundedTextField = {
-  borderRadius: '20px',
-  marginBottom: '16px',
-};
-
-const iconColorStyle = {
-  color: '#97FB57',
-};
-
-const textColorStyle = {
-  color: '#97FB57',
-};
+import LottieAnimation from 'react-lottie';
+import LoadingAnimation from '../components/Loading2.json';
 
 const CreateTurfs: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -31,7 +32,8 @@ const CreateTurfs: React.FC = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  
+  const [loading, setLoading] = useState(false); 
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: any) => {
@@ -48,6 +50,8 @@ const CreateTurfs: React.FC = () => {
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
+
+    setLoading(true);
 
     const postData = new FormData();
     postData.append('name', formData.name);
@@ -80,6 +84,8 @@ const CreateTurfs: React.FC = () => {
       }
       setError('Failed to create your turf! Try again later.');
       setMessage('');
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -87,45 +93,42 @@ const CreateTurfs: React.FC = () => {
     <div className="create-turf-container">
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
+          <IonButtons style={{ color: '#97FB57' }} slot="start">
             <IonBackButton defaultHref="/home" />
           </IonButtons>
-          <IonTitle>Create Turf</IonTitle>
+          <IonTitle style={{ color: '#97FB57' }}>Create Turf</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <form onSubmit={handleSubmit} className="create-turf-form">
-          <div className="form-group">
-            <IonLabel>Image:</IonLabel>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleImageChange} 
-              ref={fileInputRef} 
-              style={{ display: 'none' }} 
-              required 
+          <div className="form-group form-fields">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              required
             />
-            <MyButton 
-              text="Choose file" 
-              onClick={() => fileInputRef.current?.click()} 
+            <MyButton
+              text="Image"
+              onClick={() => fileInputRef.current?.click()}
             />
             {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}
           </div>
-          <div className="name-price-container">
-            <IonItem style={roundedTextField} className="ion-text-field name-input">
-              <IonIcon icon={trophyOutline} slot="start" style={iconColorStyle} />
+          <div className="form-fields">
+            <IonItem className="ion-text-field half-width">
+              <IonIcon icon={personCircle} slot="start" />
               <IonInput
                 name="name"
                 placeholder="Name"
                 value={formData.name}
                 onIonChange={handleChange}
                 required
-                style={textColorStyle}
-                className="custom-placeholder"
               />
             </IonItem>
-            <IonItem style={roundedTextField} className="ion-text-field price-input">
-              <IonIcon icon={pricetagOutline} slot="start" style={iconColorStyle} />
+            <IonItem className="ion-text-field half-width">
+              <IonIcon icon={pricetag} slot="start" />
               <IonInput
                 type="number"
                 name="price"
@@ -133,52 +136,48 @@ const CreateTurfs: React.FC = () => {
                 value={formData.price}
                 onIonChange={handleChange}
                 required
-                style={textColorStyle}
-                className="custom-placeholder"
+              />
+            </IonItem>
+            <IonItem className="ion-text-field full-width">
+              <IonIcon icon={locationSharp} slot="start" />
+              <IonInput
+                name="location"
+                placeholder="Location"
+                value={formData.location}
+                onIonChange={handleChange}
+                required
+              />
+            </IonItem>
+            <IonItem className="ion-text-field full-width">
+              <IonIcon icon={list} slot="start" />
+              <IonTextarea
+                name="description"
+                placeholder="Description"
+                value={formData.description}
+                onIonChange={handleChange}
+                required
+              />
+            </IonItem>
+            <IonItem className="ion-text-field pitches">
+              <IonIcon icon={layers} slot="start" />
+              <IonInput
+                type="number"
+                name="numberOfPitches"
+                placeholder="Pitches"
+                value={formData.numberOfPitches}
+                onIonChange={handleChange}
+                required
               />
             </IonItem>
           </div>
-          <IonItem style={roundedTextField} className="ion-text-field">
-            <IonIcon icon={locationOutline} slot="start" style={iconColorStyle} />
-            <IonInput
-              name="location"
-              placeholder="Location"
-              value={formData.location}
-              onIonChange={handleChange}
-              required
-              style={textColorStyle}
-              className="custom-placeholder"
-            />
-          </IonItem>
-          <IonItem style={roundedTextField} className="ion-text-field">
-            <IonIcon icon={documentTextOutline} slot="start" style={iconColorStyle} />
-            <IonTextarea
-              name="description"
-              placeholder="Description"
-              value={formData.description}
-              onIonChange={handleChange}
-              required
-              style={textColorStyle}
-              className="custom-placeholder"
-            />
-          </IonItem>
-          <IonItem style={roundedTextField} className="ion-text-field">
-            <IonIcon icon={layersOutline} slot="start" style={iconColorStyle} />
-            <IonInput
-              type="number"
-              name="numberOfPitches"
-              placeholder="Number of pitches"
-              value={formData.numberOfPitches}
-              onIonChange={handleChange}
-              required
-              style={textColorStyle}
-              className="custom-placeholder"
-            />
-          </IonItem>
           <MyButton text="Create" onClick={handleSubmit} />
         </form>
         {message && <div className="success-message">{message}</div>}
         {error && <div className="error-message">{error}</div>}
+        <IonLoading
+          isOpen={loading}
+          message={'Please wait...'}
+        />
       </IonContent>
     </div>
   );
