@@ -4,13 +4,35 @@ import MyButton from '../components/Button';
 import { FaCamera, FaUser } from 'react-icons/fa';
 
 const ProfilePage: React.FC = () => {
-  const [user, setUser] = useState<{ id: number; name: string; email: string; profile_picture: string | null } | null>(null);
+  const [user, setUser] = useState<{ id: number; name: string; email: string; profile_picture: string | null; turfs_created: number } | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [turfCount, setTurfCount] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchCurrentUser();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      let start = 0;
+      const end = user.turfs_created;
+      if (start === end) return;
+      
+      const duration = 2000;
+      const incrementTime = 50;
+      const step = (end - start) / (duration / incrementTime);
+      
+      const counter = setInterval(() => {
+        start += step;
+        if (start >= end) {
+          start = end;
+          clearInterval(counter);
+        }
+        setTurfCount(Math.round(start));
+      }, incrementTime);
+    }
+  }, [user]);
 
   const fetchCurrentUser = async () => {
     try {
@@ -66,7 +88,6 @@ const ProfilePage: React.FC = () => {
         });
         if (response.ok) {
           alert('Account deleted successfully');
-          // You may want to redirect the user to the login page or perform additional cleanup
         } else {
           console.error('Failed to delete account:', response.statusText);
         }
@@ -97,7 +118,7 @@ const ProfilePage: React.FC = () => {
       });
       if (response.ok) {
         const updatedUser = await response.json();
-        setUser(updatedUser.user); // Assuming the response contains the updated user object
+        setUser(updatedUser.user); 
         alert('Profile picture updated successfully');
       } else {
         console.error('Failed to update profile picture:', response.statusText);
@@ -145,10 +166,13 @@ const ProfilePage: React.FC = () => {
                 <FaCamera color="#121212" />
               </div>
             </div>
-            <div style={{ marginBottom: '20px', color: '#97FB57' }}>
+            <div style={{ marginBottom: '20px', }}>
+              <strong>Turfs Created:</strong> {turfCount}
+            </div>
+            <div style={{ marginBottom: '20px', }}>
               <strong>Name:</strong> {user.name}
             </div>
-            <div style={{ marginBottom: '20px', color: '#97FB57' }}>
+            <div style={{ marginBottom: '20px', }}>
               <strong>Email:</strong> {user.email}
             </div>
             <div style={{ marginBottom: '20px' }}>
