@@ -26,7 +26,7 @@ const CreateTurfs: React.FC = () => {
     description: '',
     image: null as File | null,
     price: 0,
-    numberOfPitches: 1,
+    number_of_pitches: 1, // align key with backend
   });
 
   const [message, setMessage] = useState('');
@@ -61,7 +61,7 @@ const CreateTurfs: React.FC = () => {
       postData.append('image', formData.image);
     }
     postData.append('price', formData.price.toString());
-    postData.append('number_of_pitches', formData.numberOfPitches.toString());
+    postData.append('number_of_pitches', formData.number_of_pitches.toString()); // align key with backend
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/turf', postData, {
@@ -162,9 +162,9 @@ const CreateTurfs: React.FC = () => {
               <IonIcon icon={layers} slot="start" />
               <IonInput
                 type="number"
-                name="numberOfPitches"
+                name="number_of_pitches" // align key with backend
                 placeholder="Pitches"
-                value={formData.numberOfPitches}
+                value={formData.number_of_pitches}
                 onIonChange={handleChange}
                 required
               />
