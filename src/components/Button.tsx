@@ -5,9 +5,9 @@ interface MyButtonProps {
   onClick?: () => void;
 }
 
-const MyButton: React.FC<MyButtonProps> = ({ text, onClick }) => {
+const MyButton: React.FC<MyButtonProps> = ({ text, onClick, }) => {
   return (
-    <div
+    <button
       onClick={onClick}
       style={{
         width: '100px',
@@ -19,10 +19,11 @@ const MyButton: React.FC<MyButtonProps> = ({ text, onClick }) => {
         fontWeight: 'bold',
         color: '#121212',
         margin: '0 auto',
+        border: 'none',
       }}
     >
       {text}
-    </div>
+    </button>
   );
 };
 

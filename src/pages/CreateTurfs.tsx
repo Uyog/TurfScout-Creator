@@ -11,7 +11,7 @@ import {
   IonTitle,
   IonContent,
   IonIcon,
-  IonLoading
+  IonLoading,
 } from '@ionic/react';
 import { personCircle, locationSharp, pricetag, list, layers } from 'ionicons/icons';
 import './CreateTurfs.css';
@@ -25,25 +25,28 @@ const CreateTurfs: React.FC = () => {
     location: '',
     description: '',
     image: null as File | null,
-    price: 0,
-    number_of_pitches: 1, // align key with backend
+    price: '',
+    number_of_pitches: '',
   });
 
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: files ? files[0] : value,
+    }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFormData({ ...formData, image: e.target.files[0] });
+      setFormData((prevFormData) => ({ ...prevFormData, image: e.target.files![0] }));
       setImagePreview(URL.createObjectURL(e.target.files[0]));
     }
   };
@@ -60,8 +63,18 @@ const CreateTurfs: React.FC = () => {
     if (formData.image) {
       postData.append('image', formData.image);
     }
-    postData.append('price', formData.price.toString());
-    postData.append('number_of_pitches', formData.number_of_pitches.toString()); // align key with backend
+    postData.append('price', formData.price);
+    postData.append('number_of_pitches', formData.number_of_pitches);
+
+    // Log formData for debugging
+    console.log('Form Data:', {
+      name: formData.name,
+      location: formData.location,
+      description: formData.description,
+      image: formData.image,
+      price: formData.price,
+      number_of_pitches: formData.number_of_pitches,
+    });
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/turf', postData, {
@@ -73,19 +86,30 @@ const CreateTurfs: React.FC = () => {
       setMessage('Your turf has been created successfully!');
       setError('');
       console.log('Turf created:', response.data);
+      setFormData({
+        name: '',
+        location: '',
+        description: '',
+        image: null,
+        price: '',
+        number_of_pitches: '',
+      });
+      setImagePreview(null);
     } catch (error: any) {
       if (error.response) {
         console.error('Error creating turf:', error.response.data);
         console.error('Status:', error.response.status);
+        setError(error.response.data.message || 'Failed to create your turf! Try again later.');
       } else if (error.request) {
         console.error('Error creating turf:', error.request);
+        setError('No response from server. Please try again later.');
       } else {
         console.error('Error creating turf:', error.message);
+        setError('Failed to create your turf! Try again later.');
       }
-      setError('Failed to create your turf! Try again later.');
       setMessage('');
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -162,7 +186,7 @@ const CreateTurfs: React.FC = () => {
               <IonIcon icon={layers} slot="start" />
               <IonInput
                 type="number"
-                name="number_of_pitches" // align key with backend
+                name="number_of_pitches"
                 placeholder="Pitches"
                 value={formData.number_of_pitches}
                 onIonChange={handleChange}
@@ -174,10 +198,7 @@ const CreateTurfs: React.FC = () => {
         </form>
         {message && <div className="success-message">{message}</div>}
         {error && <div className="error-message">{error}</div>}
-        <IonLoading
-          isOpen={loading}
-          message={'Please wait...'}
-        />
+        <IonLoading isOpen={loading} message={'Please wait...'} />
       </IonContent>
     </div>
   );
