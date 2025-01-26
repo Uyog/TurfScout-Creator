@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:turf_scout_creator/screens/create.dart';
 import 'package:turf_scout_creator/screens/home.dart';
 import 'package:turf_scout_creator/screens/login.dart';
 import 'package:turf_scout_creator/screens/otp.dart';
@@ -32,7 +33,9 @@ class MyApp extends StatelessWidget {
         '/otp': (context) => Otp(
               email: '',
             ),
-        '/reset': (context) => ResetPassword()
+        '/reset': (context) => ResetPassword(),
+        '/create': (context) => Create()
+        
       },
     );
   }
