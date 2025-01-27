@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:turf_scout_creator/screens/create.dart';
-import 'package:turf_scout_creator/screens/home.dart';
 import 'package:turf_scout_creator/screens/login.dart';
 import 'package:turf_scout_creator/screens/otp.dart';
 import 'package:turf_scout_creator/screens/password.dart';
 import 'package:turf_scout_creator/screens/reset.dart';
 import 'package:turf_scout_creator/screens/sign_up.dart';
 import 'package:turf_scout_creator/screens/splash.dart';
+import 'package:turf_scout_creator/screens/navigation_wrapper.dart'; // New import
 
 void main() {
   runApp(const MyApp());
@@ -24,18 +24,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(), // Keep splash as the starting page
       routes: {
-        '/login': (context) => Login(),
-        '/sign': (context) => SignUp(),
-        '/home': (context) => HomePage(),
-        '/password': (context) => Password(),
-        '/otp': (context) => Otp(
+        '/login': (context) => const Login(),
+        '/sign': (context) => const SignUp(),
+        '/home': (context) => const NavigationWrapper(), // Updated route
+        '/password': (context) => const Password(),
+        '/otp': (context) => const Otp(
               email: '',
             ),
-        '/reset': (context) => ResetPassword(),
-        '/create': (context) => Create()
-        
+        '/reset': (context) => const ResetPassword(),
+        '/create': (context) => const Create(), // Direct access to Create
       },
     );
   }

@@ -27,7 +27,7 @@ class _CurvedNavigationBarWidgetState extends State<CurvedNavigationBarWidget> {
       items: const [
         Icon(Icons.home, size: 30, color: Colors.white),
         Icon(Icons.search, size: 30, color: Colors.white),
-        Icon(Icons.add, size: 30, color: Colors.white), // Middle plus icon
+        Icon(Icons.add, size: 30, color: Colors.white),
         Icon(Icons.event, size: 30, color: Colors.white),
         Icon(Icons.person, size: 30, color: Colors.white),
       ],
@@ -36,12 +36,7 @@ class _CurvedNavigationBarWidgetState extends State<CurvedNavigationBarWidget> {
           currentIndex = index;
         });
 
-        // Navigate to "create.dart" when the plus icon is tapped
-        if (index == 2) {
-          Navigator.pushNamed(context, '/create'); // Ensure you have a route for '/create'
-        } else {
-          widget.onTap(index); // Trigger callback for other tabs
-        }
+        widget.onTap(index);
       },
     );
   }
