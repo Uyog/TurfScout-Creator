@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:turf_scout_creator/components/button.dart';
+import 'package:turf_scout_creator/components/text_field.dart';
 import 'dart:convert';
 import 'package:turf_scout_creator/components/token_manager.dart';
 
@@ -20,7 +22,8 @@ class _CreateState extends State<Create> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _hourlyPriceController = TextEditingController();
-  final TextEditingController _numberOfPitchesController = TextEditingController();
+  final TextEditingController _numberOfPitchesController =
+      TextEditingController();
 
   File? _selectedImage;
   Uint8List? _webImage;
@@ -75,7 +78,9 @@ class _CreateState extends State<Create> {
       final String? token = await TokenManager.instance.retrieveToken();
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Authentication token not found. Please login again.')),
+          const SnackBar(
+              content:
+                  Text('Authentication token not found. Please login again.')),
         );
         return;
       }
@@ -101,7 +106,8 @@ class _CreateState extends State<Create> {
           filename: 'upload.png',
         ));
       } else if (_selectedImage != null) {
-        request.files.add(await http.MultipartFile.fromPath('image', _selectedImage!.path));
+        request.files.add(
+            await http.MultipartFile.fromPath('image', _selectedImage!.path));
       }
 
       // Send the request
@@ -148,55 +154,59 @@ class _CreateState extends State<Create> {
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter a name' : null,
-                ),
-                TextFormField(
-                  controller: _locationController,
-                  decoration: const InputDecoration(labelText: 'Location'),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter a location' : null,
-                ),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  validator: (value) => value == null || value.isEmpty
-                      ? 'Please enter a description'
-                      : null,
-                ),
-                TextFormField(
-                  controller: _hourlyPriceController,
-                  decoration: const InputDecoration(labelText: 'Hourly Price'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) => value == null || value.isEmpty
-                      ? 'Please enter an hourly price'
-                      : null,
-                ),
-                TextFormField(
-                  controller: _numberOfPitchesController,
-                  decoration: const InputDecoration(labelText: 'Number of Pitches'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) => value == null || value.isEmpty
-                      ? 'Please enter the number of pitches'
-                      : null,
+                MyButton(
+                  text: 'Pick Image',
+                  onTap: _pickImage,
                 ),
                 const SizedBox(height: 16),
                 _buildImagePreview(),
-                ElevatedButton(
-                  onPressed: _pickImage,
-                  child: const Text('Pick Image'),
+                const SizedBox(height: 16),
+                CustomTextField(
+                  controller: _nameController,
+                  labelText: 'Name',
+                  prefixIcon: Icons.person,
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _isSubmitting ? null : _submitForm,
-                  child: _isSubmitting
-                      ? const CircularProgressIndicator()
-                      : const Text('Submit'),
+                CustomTextField(
+                  controller: _locationController,
+                  labelText: 'Location',
+                  prefixIcon: Icons.location_on,
+                ),
+                const SizedBox(height: 16),
+                CustomTextField(
+                  controller: _descriptionController,
+                  labelText: 'Description',
+                  prefixIcon: Icons.description,
+                  keyboardType: TextInputType.multiline,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        controller: _hourlyPriceController,
+                        labelText: 'Price',
+                        prefixIcon: Icons.monetization_on,
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: CustomTextField(
+                        controller: _numberOfPitchesController,
+                        labelText: 'Pitches',
+                        prefixIcon: Icons.sports_soccer,
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                MyButton(
+                  text: _isSubmitting ? 'Submitting...' : 'Submit',
+                  onTap: _isSubmitting ? null : _submitForm,
                 ),
               ],
             ),
