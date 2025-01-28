@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +21,12 @@ class _CreateState extends State<Create> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _hourlyPriceController = TextEditingController();
-  final TextEditingController _numberOfPitchesController =
-      TextEditingController();
+  final TextEditingController _numberOfPitchesController = TextEditingController();
 
-  File? _selectedImage;
-  Uint8List? _webImage;
-
+  List<Uint8List> _webImages = []; // List to store selected images
   bool _isSubmitting = false;
 
+  // Pick image(s) and add them to the list
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -38,33 +35,44 @@ class _CreateState extends State<Create> {
       final fileBytes = await pickedFile.readAsBytes();
 
       setState(() {
-        if (kIsWeb) {
-          _webImage = fileBytes; // For Flutter Web
-          _selectedImage = null; // Reset for web compatibility
-        } else {
-          _selectedImage = File(pickedFile.path);
-          _webImage = null; // Reset for non-web platforms
-        }
+        _webImages.add(fileBytes); // Add new image to the list
       });
     }
   }
 
+  // Display all selected images as previews
   Widget _buildImagePreview() {
-    if (kIsWeb && _webImage != null) {
-      return Image.memory(_webImage!, height: 150);
-    } else if (_selectedImage != null) {
-      return Image.file(_selectedImage!, height: 150);
+    if (_webImages.isEmpty) {
+      return const Text('No images selected');
     } else {
-      return const Text('No image selected');
+      return SizedBox(
+        height: 150,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _webImages.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.memory(
+                _webImages[index],
+                width: 100, // Adjust the size as needed
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+            );
+          },
+        ),
+      );
     }
   }
 
+  // Handle form submission
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_selectedImage == null && _webImage == null) {
+    if (_webImages.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an image')),
+        const SnackBar(content: Text('Please select at least one image')),
       );
       return;
     }
@@ -79,8 +87,7 @@ class _CreateState extends State<Create> {
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content:
-                  Text('Authentication token not found. Please login again.')),
+              content: Text('Authentication token not found. Please login again.')),
         );
         return;
       }
@@ -98,16 +105,13 @@ class _CreateState extends State<Create> {
       request.fields['price_per_hour'] = _hourlyPriceController.text;
       request.fields['number_of_pitches'] = _numberOfPitchesController.text;
 
-      // Add image file
-      if (kIsWeb && _webImage != null) {
+      // Add images
+      for (int i = 0; i < _webImages.length; i++) {
         request.files.add(http.MultipartFile.fromBytes(
-          'image',
-          _webImage!,
-          filename: 'upload.png',
+          'images[]', // Using an array field name for images
+          _webImages[i],
+          filename: 'upload$i.png', // Unique filename for each image
         ));
-      } else if (_selectedImage != null) {
-        request.files.add(
-            await http.MultipartFile.fromPath('image', _selectedImage!.path));
       }
 
       // Send the request
@@ -120,12 +124,11 @@ class _CreateState extends State<Create> {
         );
         _formKey.currentState!.reset();
         setState(() {
-          _selectedImage = null;
-          _webImage = null;
+          _webImages.clear(); // Clear selected images
           _isSubmitting = false;
         });
       } else {
-        final errorMessage = jsonDecode(responseData.body)['error'] ??
+        final errorMessage = jsonDecode(responseData.body)['error'] ?? 
             'Failed to create turf: ${response.statusCode}';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMessage)),
@@ -157,11 +160,11 @@ class _CreateState extends State<Create> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 MyButton(
-                  text: 'Pick Image',
+                  text: 'Pick Image(s)',
                   onTap: _pickImage,
                 ),
                 const SizedBox(height: 16),
-                _buildImagePreview(),
+                _buildImagePreview(), // Show all selected images here
                 const SizedBox(height: 16),
                 CustomTextField(
                   controller: _nameController,
