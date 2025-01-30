@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:turf_scout_creator/components/token_manager.dart';
 import 'dart:convert';
-import 'update.dart'; // Import update page
+import 'update.dart'; 
 
 class Turfs extends StatefulWidget {
   const Turfs({super.key});
@@ -26,9 +26,7 @@ class _TurfsState extends State<Turfs> {
     final String apiUrl = "http://127.0.0.1:8000/api/turf";
 
     try {
-      // Retrieve token securely
       final String? token = await TokenManager.instance.retrieveToken();
-
       if (token == null) {
         throw Exception("No token found. Please log in again.");
       }
@@ -39,8 +37,8 @@ class _TurfsState extends State<Turfs> {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body); // Decode as Map
-        List<dynamic> turfsData = data['data']; // Assuming the list is under 'data'
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        List<dynamic> turfsData = data['data'];
 
         setState(() {
           turfs = List<Map<String, dynamic>>.from(turfsData);
@@ -59,9 +57,7 @@ class _TurfsState extends State<Turfs> {
     final String apiUrl = "http://127.0.0.1:8000/api/turf/$id";
 
     try {
-      // Retrieve token securely
       final String? token = await TokenManager.instance.retrieveToken();
-
       if (token == null) {
         throw Exception("No token found. Please log in again.");
       }
@@ -137,18 +133,27 @@ class _TurfsState extends State<Turfs> {
                           Row(
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
                                 onPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => UpdateTurf(turfId: turf['id']),
+                                      builder: (context) => UpdateTurf(
+                                        turfId: turf['id'],
+                                        currentName: turf['name'],
+                                        currentPrice: turf['price_per_hour'].toString(),
+                                        currentLocation: turf['location'],
+                                        currentDescription: turf['description'],
+                                        currentNumberOfPitches: turf['number_of_pitches'].toString(),
+                                      ),
                                     ),
-                                  );
+                                  ).then((_) => fetchTurfs()); // Refresh turfs after update
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () => deleteTurf(turf['id']),
                               ),
                             ],

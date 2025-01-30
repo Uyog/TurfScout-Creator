@@ -8,7 +8,6 @@ import 'package:turf_scout_creator/screens/sign_up.dart';
 import 'package:turf_scout_creator/screens/splash.dart';
 import 'package:turf_scout_creator/screens/navigation_wrapper.dart';
 import 'package:turf_scout_creator/screens/turfs.dart';
-import 'package:turf_scout_creator/screens/update.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +37,6 @@ class MyApp extends StatelessWidget {
         '/reset': (context) => const ResetPassword(),
         '/create': (context) => const Create(), 
         '/turf': (context) => const Turfs(),
-        '/update': (context) => const UpdateTurf(turfId: null,),
 
         
       },
