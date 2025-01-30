@@ -70,7 +70,7 @@ class LoginState extends State<Login> {
       }
     } catch (e) {
       _showAlertDialog(
-        'assets/images/Animation - 1735402589418.json',
+        'assets/images/Animation - 1735403141081.json',
         'Connection Error',
         'Could not connect to the server. Please try again.',
         () => Navigator.pop(context),

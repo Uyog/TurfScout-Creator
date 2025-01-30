@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:turf_scout_creator/components/navigation_bar.dart';
 import 'package:turf_scout_creator/screens/create.dart';
 import 'package:turf_scout_creator/screens/home.dart';
+import 'package:turf_scout_creator/screens/turfs.dart';
 
 class NavigationWrapper extends StatefulWidget {
   const NavigationWrapper({super.key});
@@ -15,10 +16,10 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
 
   final List<Widget> pages = [
     const HomePage(),
-    const Center(child: Text("Search Screen")), // Placeholder for Search
-    const Create(), // Create screen for index 2
-    const Center(child: Text("Events Screen")), // Placeholder for Events
-    const Center(child: Text("Profile Screen")), // Placeholder for Profile
+    const Center(child: Text("Search Screen")), 
+    const Create(), 
+    const Turfs(), 
+    const Center(child: Text("Profile Screen")), 
   ];
 
   void _onNavItemTapped(int index) {
