@@ -139,7 +139,7 @@ class _OtpState extends State<Otp> {
 
               // Subtitle
               Text(
-                'A 6-digit code has been sent to\n"${email}"!',
+                'A 6-digit code has been sent to\n"$email"!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: screenHeight * 0.018,

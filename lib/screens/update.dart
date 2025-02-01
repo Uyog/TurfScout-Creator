@@ -37,7 +37,7 @@ class _UpdateTurfState extends State<UpdateTurf> {
   late TextEditingController _hourlyPriceController;
   late TextEditingController _numberOfPitchesController;
 
-  List<Uint8List> _webImages = [];
+  final List<Uint8List> _webImages = [];
   bool _isSubmitting = false;
 
   @override

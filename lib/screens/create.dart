@@ -23,7 +23,7 @@ class _CreateState extends State<Create> {
   final TextEditingController _hourlyPriceController = TextEditingController();
   final TextEditingController _numberOfPitchesController = TextEditingController();
 
-  List<Uint8List> _webImages = []; // List to store selected images
+  final List<Uint8List> _webImages = []; // List to store selected images
   bool _isSubmitting = false;
 
   // Pick image(s) and add them to the list

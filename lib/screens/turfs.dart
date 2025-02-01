@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:turf_scout_creator/components/token_manager.dart';
 import 'dart:convert';
 import 'update.dart'; 
+import 'statistics.dart'; // Import the Statistics page
 
 class Turfs extends StatefulWidget {
   const Turfs({super.key});
@@ -100,65 +101,76 @@ class _TurfsState extends State<Turfs> {
                 itemBuilder: (context, index) {
                   final turf = turfs[index];
 
-                  return Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to Statistics page with turf details
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Statistics(
+                            turfId: turf['id'],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                turf['name'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  turf['name'],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Kshs ${turf['price_per_hour']}",
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.edit, color: Colors.blue),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => UpdateTurf(
-                                        turfId: turf['id'],
-                                        currentName: turf['name'],
-                                        currentPrice: turf['price_per_hour'].toString(),
-                                        currentLocation: turf['location'],
-                                        currentDescription: turf['description'],
-                                        currentNumberOfPitches: turf['number_of_pitches'].toString(),
+                                Text(
+                                  "Kshs ${turf['price_per_hour']}",
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UpdateTurf(
+                                          turfId: turf['id'],
+                                          currentName: turf['name'],
+                                          currentPrice: turf['price_per_hour'].toString(),
+                                          currentLocation: turf['location'],
+                                          currentDescription: turf['description'],
+                                          currentNumberOfPitches: turf['number_of_pitches'].toString(),
+                                        ),
                                       ),
-                                    ),
-                                  ).then((_) => fetchTurfs()); // Refresh turfs after update
-                                },
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () => deleteTurf(turf['id']),
-                              ),
-                            ],
-                          ),
-                        ],
+                                    ).then((_) => fetchTurfs()); // Refresh turfs after update
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () => deleteTurf(turf['id']),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
