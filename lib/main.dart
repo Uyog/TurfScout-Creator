@@ -3,6 +3,7 @@ import 'package:turf_scout_creator/screens/create.dart';
 import 'package:turf_scout_creator/screens/login.dart';
 import 'package:turf_scout_creator/screens/otp.dart';
 import 'package:turf_scout_creator/screens/password.dart';
+import 'package:turf_scout_creator/screens/profile.dart';
 import 'package:turf_scout_creator/screens/reset.dart';
 import 'package:turf_scout_creator/screens/sign_up.dart';
 import 'package:turf_scout_creator/screens/splash.dart';
@@ -37,6 +38,8 @@ class MyApp extends StatelessWidget {
         '/reset': (context) => const ResetPassword(),
         '/create': (context) => const Create(), 
         '/turf': (context) => const Turfs(),
+        '/profile': (context) => const Profile(),
+        
 
         
       },
